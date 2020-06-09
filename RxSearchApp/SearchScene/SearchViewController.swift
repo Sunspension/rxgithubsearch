@@ -73,10 +73,9 @@ class SearchViewController: UITableViewController {
         
         _searchController.searchBar.rx.text
             .orEmpty
-            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+            .debounce(.milliseconds(400), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
-            .map { $0.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "" }
-            .flatMapLatest { [weak self] in self?._viewModel.search(query: $0) ?? .just([]) }
+            .flatMapLatest { [unowned self] in self._viewModel.search(query: $0) }
             .bind(to: tableView.rx.items(cellIdentifier: _cellIdentifier, cellType: UITableViewCell.self)) { row, element, cell in
                 cell.textLabel?.text = element.name }
             .disposed(by: _bag)

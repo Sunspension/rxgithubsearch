@@ -23,8 +23,6 @@ protocol Assembler {
 
 class AssemblerImplementation: Assembler {
     
-    // MARK: - Protocol implementation
-    
     func controller(type: AppControllerType) -> UIViewController {
         
         switch type {

@@ -40,9 +40,9 @@ extension SearchViewModelImplementation: SearchViewModel {
     
     func search(query: String) -> Single<[GitHubRepository]> {
         
-        if query.isEmpty { return .just([]) }
-        return _api.request(SearchRepositories(query: query))
-            .catchErrorJustReturn([])
+        let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        if encodedQuery.isEmpty { return .just([]) }
+        return _api.request(SearchRepositories(query: encodedQuery)).catchErrorJustReturn([])
     }
  
     func onItemSelected(_ repository: GitHubRepository) {
