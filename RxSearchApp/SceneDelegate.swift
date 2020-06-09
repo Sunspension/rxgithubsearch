@@ -2,7 +2,7 @@
 //  SceneDelegate.swift
 //  RxSearchApp
 //
-//  Created by Vladimir Kokhanevich on 08.06.2020.
+//  Created by Vladimir Kokhanevich on 09.06.2020.
 //  Copyright © 2020 Vladimir Kokhanevich. All rights reserved.
 //
 
@@ -10,6 +10,7 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
+    private let _assembler: Assembler = AssemblerImplementation()
     var window: UIWindow?
 
 
@@ -17,7 +18,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        
+        guard let windowsScene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(windowScene: windowsScene)
+        window?.rootViewController = _assembler.controller(type: .root)
+        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
