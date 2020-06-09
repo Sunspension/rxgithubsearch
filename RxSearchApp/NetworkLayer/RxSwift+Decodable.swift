@@ -14,11 +14,7 @@ extension String: LocalizedError {
     public var errorDescription: String? { return self }
 }
 
-public extension ObservableType where Element == Data {
-    
-    func map<T: Decodable>(_ type: T.Type, using decoder: JSONDecoder = JSONDecoder()) -> Observable<T> {
-        return map { data -> T in try decoder.decode(type, from: data) }
-    }
+extension ObservableType where Element == Data {
     
     func map<T: Decodable>(_ type: T.Type, keyPath: String? = nil, using decoder: JSONDecoder = JSONDecoder()) -> Observable<T> {
         return self.map { data -> T in
@@ -26,8 +22,7 @@ public extension ObservableType where Element == Data {
             if let keyPath = keyPath {
                 
                 guard let json = (try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSDictionary)?
-                    .value(forKeyPath: keyPath) else { throw "Failed to map data to JSON." }
-                guard JSONSerialization.isValidJSONObject(json) else { throw "Failed to map data to JSON." }
+                    .value(forKeyPath: keyPath), JSONSerialization.isValidJSONObject(json) == true else { throw "Failed to map data to JSON." }
                 result = try JSONSerialization.data(withJSONObject: json)
             }
             else { result = data }
