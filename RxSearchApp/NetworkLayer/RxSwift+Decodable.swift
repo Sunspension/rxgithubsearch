@@ -17,7 +17,9 @@ extension String: LocalizedError {
 extension ObservableType where Element == Data {
     
     func map<T: Decodable>(_ type: T.Type, keyPath: String? = nil, using decoder: JSONDecoder = JSONDecoder()) -> Observable<T> {
-        return self.map { data -> T in
+        
+        return map { data -> T in
+            
             let result: Data
             if let keyPath = keyPath {
                 
@@ -26,6 +28,7 @@ extension ObservableType where Element == Data {
                 result = try JSONSerialization.data(withJSONObject: json)
             }
             else { result = data }
+            
             return try decoder.decode(type, from: result)
         }
     }
